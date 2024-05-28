@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Steganography</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2b3e50;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #ffffff;
+        }
+
+        .container {
+            background-color: #35475e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #ffffff;
+        }
+
+        .header p {
+            margin: 0;
+            font-size: 1.2em;
+            color: #ffffff;
+        }
+
+        .tab {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .tab button {
+            background-color: #1a73e8;
+            color: #ffffff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+            flex: 1;
+        }
+
+        .tab button:not(:last-child) {
+            border-right: 1px solid #ffffff;
+        }
+
+        .tab button:hover {
+            background-color: #155cb0;
+        }
+
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border-top: none;
+        }
+
+        .active-tab {
+            display: block;
+        }
+
+        .input-section, .decode-section {
+            margin-bottom: 20px;
+        }
+
+        .button {
+            background-color: #1a73e8;
+            color: #ffffff;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+            margin: 10px 0;
+            font-size: 1em;
+        }
+
+        .button:hover {
+            background-color: #155cb0;
+            transform: scale(1.05);
+        }
+
+        .input input {
+            padding: 10px;
+            width: calc(100% - 22px);
+            margin: 10px 0;
+            border: 1px solid #11212D;
+            border-radius: 5px;
+        }
+
+        .img-cont {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .img1, .EncodedImage {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ffffff;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .img-container {
+            width: 45%;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .container {
+        position: relative;     /* Gaya-gaya lainnya untuk container */
+        }
+
+        .logo {
+        position: absolute;
+        top: 10px; /* Atur posisi vertikal logo */
+        left: 10px; /* Atur posisi horizontal logo */
+        }
+
+        .logo img {
+        height: 60px; /* Sesuaikan tinggi logo sesuai kebutuhan */
+        width: auto; /* Sesuaikan lebar logo sesuai kebutuhan */
+        border: none;
+        }
+        .logo p {
+    margin: 0;
+    font-size: 1em;
+    color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Steganography</h1>
+            <p>Selamat Datang Di Project Rexa_Irfan_Yuda</p>
+        </div>
+        
+            <div class="logo">
+              <img src="LOGO-UNSIL.png" alt="Custom Logo">
+              <p>Universitas Siliwangi</p>
+            </div>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Encode')">Encode</button>
+            <button class="tablinks" onclick="openTab(event, 'Decode')">Decode</button>
+        </div>
+        <div id="Encode" class="tabcontent">
+            <div class="input-section">
+                <label for="image-upload" class="button">
+                    Pilih Gambar
+                    <input id="image-upload" type="file" name="pic" accept="image/*" onchange="readURL(this);" style="display: none;">
+                </label>
+                <div class="input">
+                    <input id="text" type="text" placeholder="Masukkan Pesan">
+                </div>
+                <div class="button-container">
+                    <button class="button" onclick="hideTextLowBit()">
+                        Sisipkan Pesan Ke Dalam Gambar
+                    </button>
+                    <button class="button" onclick="resetEncodeForm()">
+                        Reset
+                    </button>
+                </div>
+                
+                <button class="button" id="download-encoded-button" style="display: none;" onclick="downloadEncodedImage()">
+                    Unduh Gambar Encode
+                </button>
+            </div>
+            <div class="img-cont">
+                <div class="img-container img1">
+                    <h5>Gambar Sebelum Disisipkan Pesan</h5>
+                    <img id="image1" src="" alt="">
+                </div>
+                <div class="img-container EncodedImage">
+                    <h5>Gambar Sesudah Disisipkan Pesan</h5>
+                    <img id="image2" src="" alt="">
+                </div>
+            </div>
+        </div>
+        <div id="Decode" class="tabcontent">
+            <div class="decode-section">
+                <div class="button-container">
+                    <button class="button" onclick="resetDecodeForm()">
+                        Reset
+                    </button>
+                <label for="image-decode" class="button">
+                    Pilih Gambar
+                    <input id="image-decode" type="file" name="pic" accept="image/*" onchange="decode(this);" style="display: none;">
+                </label>
+                
+                </div>
+                <h5>Pesan Yang Disisipkan:</h5>
+                <h2 id="decoded"></h2>
+            </div>
+        </div>
+    </div>
+    <script>
+        var originalImageDataURL = '';
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].style.backgroundColor = "";
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.style.backgroundColor = "#155cb0";
+        }
+
+        document.getElementsByClassName("tablinks")[0].click();
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var image = new Image();
+                    image.onload = function() {
+                        document.getElementById('image1').src = e.target.result;
+                        originalImageDataURL = e.target.result;
+                        document.getElementById('download-original-button').style.display = "block";
+                    }
+                    image.src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function hideTextLowBit() {
+            var image = document.getElementById('image1');
+            var text = document.getElementById('text').value + "\0"; // Adding a null character as a delimiter
+            var canvas = document.createElement("canvas");
+            var ctx = canvas.getContext("2d");
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            ctx.drawImage(image, 0, 0);
+            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var pixels = imageData.data;
+
+            var textBinary = "";
+            for (var i = 0; i < text.length; i++) {
+                var binaryChar = text.charCodeAt(i).toString(2).padStart(8, '0');
+                textBinary += binaryChar;
+            }
+            
+            var bitIndex = 0;
+            for (var i = 0; i < pixels.length && bitIndex < textBinary.length; i += 4) {
+                pixels[i] = (pixels[i] & 0xFE) | parseInt(textBinary[bitIndex], 2);
+                bitIndex++;
+            }
+
+            ctx.putImageData(imageData, 0, 0);
+            var encodedImage = canvas.toDataURL("image/png");
+            document.getElementById('image2').src = encodedImage;
+            document.getElementById('download-encoded-button').style.display = "block";
+        }
+
+        function decode(input) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var image = new Image();
+                image.onload = function () {
+                    var canvas = document.createElement("canvas");
+                    var ctx = canvas.getContext("2d");
+                    canvas.width = image.naturalWidth;
+                    canvas.height = image.naturalHeight;
+                    ctx.drawImage(image, 0, 0);
+                    var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    var pixels = imageData.data;
+
+                    var binaryText = "";
+                    for (var i = 0; i < pixels.length; i += 4) {
+                        binaryText += (pixels[i] & 1).toString();
+                    }
+
+                    var decodedText = "";
+                    var bitIndex = 0;
+                    while (bitIndex + 7 < binaryText.length) {
+                        var byte = binaryText.substr(bitIndex, 8);
+                        if (byte === '00000000') {
+                            break;
+                        }
+                        var charCode = parseInt(byte, 2);
+                        decodedText += String.fromCharCode(charCode);
+                        bitIndex += 8;
+                    }
+
+                    // Additional cleanup: remove any leading/trailing whitespace
+                    decodedText = decodedText.trim();
+
+                    document.getElementById('decoded').innerText = decodedText;
+                }
+                image.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function downloadOriginalImage() {
+            var link = document.createElement('a');
+            link.href = originalImageDataURL;
+            link.download = 'original_image.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function downloadEncodedImage() {
+            var link = document.createElement('a');
+            link.href = document.getElementById('image2').src;
+            link.download = 'encoded_image.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function resetEncodeForm() {
+            document.getElementById('image1').src = "";
+            document.getElementById('image2').src = "";
+            document.getElementById('text').value = "";
+            document.getElementById('decoded').innerText = "";
+            document.getElementById('download-original-button').style.display = "none";
+            document.getElementById('download-encoded-button').style.display = "none";
+            originalImageDataURL = '';
+        }
+
+        function resetDecodeForm() {
+            document.getElementById('image-decode').value = "";
+            document.getElementById('decoded').innerText = "";
+        }
+    </script>
+</body>
+</html>
